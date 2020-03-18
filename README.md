@@ -1,11 +1,26 @@
 # CSE135_HW5
 
+**Deployed on: **
+
+**CSE135 Grader Account:**
+- email: cse135grader@email.com
+- password: password
+
+### Stack
+#### Frontend
+- VueJS
+- VueChartJS
+- AgGrid Vue
+#### Backend 
+- Firebase Functions
+- Firebase Authentication
+- NodeJS
+- Express
+- FireStore DB
+
 ## Overview of Auth Code
 **backend / functions / index.js**
-- Using:
-	- Firebase Functions + Auth
-	- Express, NodeJS
-	- VueJS *(frontend)*
+
 #### Backend Auth Code - Index.js Firebase Functions 
 ## Routing Code
 All Routing for backend api happens inside **Index.js**
