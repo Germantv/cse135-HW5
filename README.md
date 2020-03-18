@@ -1,7 +1,5 @@
 # CSE135_HW5
 
-**Deployed on: **
-
 **CSE135 Grader Account:**
 - email: cse135grader@email.com
 - password: password
