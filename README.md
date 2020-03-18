@@ -333,3 +333,8 @@ components: {
 ![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/browsers.png)	
 ![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/dashboard.png)	
 ![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/profile.png)	
+
+#### Admin Views 
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/admin_delete-user.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/edit_user.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/success_edit-user.png)	
