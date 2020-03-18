@@ -328,4 +328,8 @@ components: {
 },
 </script
 ```
+#### Charts in my Vue Project depicting data reports
 ![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/speeds.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/browsers.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/dashboard.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/profile.png)	
