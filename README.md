@@ -7,6 +7,9 @@
 	- Express, NodeJS
 	- VueJS *(frontend)*
 #### Backend Auth Code - Index.js Firebase Functions 
+## Routing Code
+All Routing for backend api happens inside **Index.js**
+- Moved backend code to Firebase functions to have it publicly deployed for grading
 ```
 const functions = require('firebase-functions');
 const express = require('express');
@@ -108,70 +111,25 @@ export default {
 }
 </script>
 ```
-## Routing Code
-#### Backend
-**backend / fire-token / src / index.ts**
 
-My api endpoints are `/reports/browsers` and `/reports/speed` which also match the routing for my Vue endpoint
-```
-import * as Express from "express"
-import * as Cors from "cors"
-import * as admin from 'firebase-admin'
-import { checkIfAuthenticated } from './auth.middleware'
-
-const app = Express()
-const port = 3000
-
-let db = admin.firestore()
-
-app.use(Cors())
-
-app.get("/reports/browsers", checkIfAuthenticated, async (_, res: Express.Response) => {
-	db.collection('browsers').get()
-		.then((snapshot) => {
-			var docsArray: FirebaseFirestore.DocumentData[] = []
-			snapshot.forEach((doc) => {
-				console.log(doc.id, '=>', doc.data())
-				docsArray.push(doc.data())
-			});
-			return res.send(docsArray)
-		})
-		.catch((err) => {
-			console.log('Error getting documents', err);
-		});
-})
-
-app.get("/reports/speed", checkIfAuthenticated, async (_, res: Express.Response) => {
-	db.collection('speeds').get()
-		.then((snapshot) => {
-			var docsArray: FirebaseFirestore.DocumentData[] = []
-			snapshot.forEach((doc) => {
-				console.log(doc.id, '=>', doc.data());
-				docsArray.push(doc.data())
-			});
-			return res.send(docsArray)
-		})
-		.catch((err) => {
-			console.log('Error getting documents', err);
-		});
-})
-
-app.listen(port, () => console.log("working on port: " + port))
-```
 #### frontent (SPA)
 **frontend / cse135-hw4 / src / router / index.js**
 - App launches and goes to http://localhost:8082/ 
 	- click login goes to http://localhost:8082/login
 	- after user logs in taken to http://localhost:8082/dashboard
 	- dashboard has 2 buttons **Speeds** and **Browsers** which take you to http://localhost:8082/reports/speed  and http://localhost:8082/reports/browsers respectively
+	- For final project, another button, **Admin** allows admin users to see user table, delete users, and edit users
+	- Finally, for Final, added **Profile** button to see your own logins and account information
 ```
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Speeds from '../views/Speeds.vue'
 import Browsers from '../views/Browsers.vue'
+import Admin from '../views/Admin.vue'
+import Profile from '../views/Profile.vue'
+import EditUser from '../views/EditUser.vue'
 
 import * as firebase from "firebase/app"
 import "firebase/auth"
@@ -181,11 +139,6 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/login',
     name: 'Login',
     component: Login
   },
@@ -193,7 +146,9 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: {requiresAuth: true}
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/reports/browsers',
@@ -205,6 +160,24 @@ const routes = [
     name: 'Speeds',
     component: Speeds
   },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/edit/user',
+    name: 'EditUser',
+    component: EditUser
+  }
 ]
 
 const router = new VueRouter({
@@ -213,12 +186,22 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const isAuthenticated = firebase.auth().currentUser
+  if(requiresAuth && !isAuthenticated) {
+    next("/dashboard")
+  } else {
+    next()
+  }
+})
 
 export default router
 
+
 ```
-## Diagram showing PoC examples including their routes
-![Diagram](https://github.com/Germantv/CSE135_HW4/blob/master/app-diagram.png)
+## Final Diagram showing All Routes and Views
+![Diagram](https://github.com/Germantv/CSE135-HW5/blob/master/final-wireframe.png)
 
 
 ## Grid Library Used
