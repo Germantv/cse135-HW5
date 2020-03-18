@@ -262,7 +262,9 @@ Creating Grid object and using exported data from <script> tags to populate grid
 	@grid-ready="onGridReady"
 ></ag-grid-vue>
 ```
-![grid screenshot](https://github.com/Germantv/CSE135_HW4/blob/master/grid-vue-filtering.png)	
+![grid screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/grid-vue-filtering.png)	
+![grid filter screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/browsers_filter_search.png)	
+
 ## Chart Library Used
 https://vue-chartjs.org/guide/#introduction
 - vue-chartsjs is a wrapper for Chart.js, a popular well known library for charts using JS
@@ -326,4 +328,4 @@ components: {
 },
 </script
 ```
-![chart screenshot](https://github.com/Germantv/CSE135_HW4/blob/master/chart-vue.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/speeds.png)	
