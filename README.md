@@ -125,7 +125,7 @@ export default {
 </script>
 ```
 
-#### frontent (SPA)
+#### frontend (SPA)
 **frontend / cse135-hw4 / src / router / index.js**
 - App launches and goes to http://localhost:8082/ 
 	- click login goes to http://localhost:8082/login
