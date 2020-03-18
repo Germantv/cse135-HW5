@@ -1,8 +1,11 @@
 # CSE135_HW5
 
 ## Overview of Auth Code
-**backend / functions / index.js **
-- Using Firebase Functions + Auth, Express, NodeJS, TypeScript, VueJS *(frontend)*
+**backend / functions / index.js**
+- Using:
+	- Firebase Functions + Auth
+	- Express, NodeJS
+	- VueJS *(frontend)*
 #### Backend Auth Code - Index.js Firebase Functions 
 ```
 const functions = require('firebase-functions');
@@ -66,6 +69,7 @@ app.get("/reports/speed", (req, res) => {
 
 // Expose Express API as a single Cloud Function:
 exports.api = functions.https.onRequest(app);
+```
 ```
 // Dashboard view protected - requires auth - can't view any view nexted 
 // inside dashboard without being authenticated
