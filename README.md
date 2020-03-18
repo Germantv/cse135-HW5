@@ -118,8 +118,10 @@ export default {
 	- click login goes to http://localhost:8082/login
 	- after user logs in taken to http://localhost:8082/dashboard
 	- dashboard has 2 buttons **Speeds** and **Browsers** which take you to http://localhost:8082/reports/speed  and http://localhost:8082/reports/browsers respectively
-	- For final project, another button, **Admin** allows admin users to see user table, delete users, and edit users
+	- For final project, another button, **Admin** allows admin users to see user table, delete users, and edit users 
+		- route: http://localhost:8082/admin
 	- Finally, for Final, added **Profile** button to see your own logins and account information
+		- route: http://localhost:8082/profile
 ```
 import Vue from 'vue'
 import VueRouter from 'vue-router'
