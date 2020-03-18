@@ -1,46 +1,71 @@
-# CSE135_HW4
+# CSE135_HW5
 
 ## Overview of Auth Code
-**backend / fire-token / src / auth.middleware.ts**
-- Using Firebase Authentication, Express, NodeJS, TypeScript *(backend only)*, VueJS *(frontend)*
-#### Backend Auth Code
+**backend / functions / index.js **
+- Using Firebase Functions + Auth, Express, NodeJS, TypeScript, VueJS *(frontend)*
+#### Backend Auth Code - Index.js Firebase Functions 
 ```
-// Takes away TypeScript error lets me add more properties to req object
-interface IRequest extends Express.Request {
-	[key: string]: any
-}
+const functions = require('firebase-functions');
+const express = require('express');
+const admin = require('firebase-admin');
+const cors = require('cors');
 
-const getAuthToken = (req: IRequest, _: any, next: any) => {
-	// Authorizaion: "Bearer 1232849dkls"
-	if(req.headers.authorization && req.headers.authorization.split(" ")[0] == "Bearer") {
-		// grab token from req header and set it
-		req.authToken = req.headers.authorization.split(" ")[1]
-	} else {
-		req.authToken = null
-	}
-	next()
-}
+const app = express();
 
-// check if user is authenticated add this middleWare to get routes
-export const checkIfAuthenticated = (req: IRequest, res: Express.Response, next: any) => {
-	// calling getAuthToken created above and verifying bearer token 
-	getAuthToken(req, res, async () => {
-		try {
-			const { authToken } = req
-			// firebase verifyIdToken 
-			const userInfo = await admin.auth().verifyIdToken(authToken)
-			req.authId = userInfo.uid
-			return next()
-		} catch(err){
-			return res.status(401).send({error: 'You are not authorized'})
-		}
-	})
-}
-```
-- The above Authentication code has 2 methods: `getAuthToken` and `checkIfAuthenticated`
-  - `getAuthToken` gets called inside `checkIfAuthenticated` which gets used as middleware in my routes where I pull data from Firebase 
-#### Frontend Auth/Login Code
-**index.js**
+admin.initializeApp(functions.config().firebase);
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true, credentials: true }));
+
+const db = admin.firestore();
+
+
+app.get("/roles", (req, res) => {
+	db.collection("roles").get()
+		.then((snapshot) => {
+			var docsArray = []
+			snapshot.forEach(doc => {
+				console.log(doc.id, "=>", doc.data())
+				docsArray.push(doc.data())
+			});
+			return res.send(docsArray)
+		})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+		});
+})
+
+app.get("/reports/browsers", (req, res) => {
+	db.collection('browsers').get()
+		.then((snapshot) => {
+			var docsArray = []
+			snapshot.forEach((doc) => {
+				console.log(doc.id, '=>', doc.data())
+				docsArray.push(doc.data())
+			});
+			return res.send(docsArray)
+		})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+		});
+})
+
+app.get("/reports/speed", (req, res) => {
+	db.collection('speeds').get()
+		.then((snapshot) => {
+			var docsArray = []
+			snapshot.forEach((doc) => {
+				console.log(doc.id, '=>', doc.data());
+				docsArray.push(doc.data())
+			});
+			return res.send(docsArray)
+		})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+		});
+})
+
+// Expose Express API as a single Cloud Function:
+exports.api = functions.https.onRequest(app);
 ```
 // Dashboard view protected - requires auth - can't view any view nexted 
 // inside dashboard without being authenticated
