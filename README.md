@@ -131,15 +131,16 @@ export default {
 
 #### frontend (SPA)
 **frontend / cse135-hw4 / src / router / index.js**
-- App launches and goes to http://localhost:8082/ 
-	- click login goes to http://localhost:8082/login
-	- after user logs in taken to http://localhost:8082/dashboard
-	- dashboard has 2 buttons **Speeds** and **Browsers** which take you to http://localhost:8082/reports/speed  and http://localhost:8082/reports/browsers respectively
-	- For final project, another button, **Admin** allows admin users to see user table, delete users, and edit users 
-		- route: http://localhost:8082/admin
-		- http://localhost:8082/edit/user
-	- Finally, for Final, added **Profile** button to see your own logins and account information
-		- route: http://localhost:8082/profile
+- App launches and goes to https://germanflores-cse135-hw5.firebaseapp.com/
+- after user logs in taken to https://germanflores-cse135-hw5.firebaseapp.com/dashboard
+- dashboard has 2 buttons **Speeds** and **Browsers** which take you to:
+	- https://germanflores-cse135-hw5.firebaseapp.com/reports/speed  
+	- https://germanflores-cse135-hw5.firebaseapp.com/reports/browsers 
+- For final project, another button, **Admin** allows admin users to see user table, delete users, and edit users 
+	- route: https://germanflores-cse135-hw5.firebaseapp.com/admin
+	- https://germanflores-cse135-hw5.firebaseapp.com/edit/user
+- Finally, for Final, added **Profile** button to see your own logins and account information
+	- route: https://germanflores-cse135-hw5.firebaseapp.com/profile
 ```
 import Vue from 'vue'
 import VueRouter from 'vue-router'
