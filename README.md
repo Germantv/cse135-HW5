@@ -335,6 +335,8 @@ components: {
 ![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/profile.png)	
 
 #### Admin Views 
-![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/admin_delete-user.png)	
-![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/edit_user.png)	
-![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/success_edit-user.png)	
+![deleted user](https://github.com/Germantv/CSE135-HW5/blob/master/admin_delete-user.png)	
+![edit user](https://github.com/Germantv/CSE135-HW5/blob/master/edit_user.png)	
+![success editing user](https://github.com/Germantv/CSE135-HW5/blob/master/success_edit-user.png)	
+**Admin View when User is not an Admin**
+![not admin view](https://github.com/Germantv/CSE135-HW5/blob/master/not_admin_view.png)	
