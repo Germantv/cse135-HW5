@@ -1,8 +1,12 @@
 # CSE135_HW5
 
+### Hosting live using Firebase Hosting
+**https://germanflores-cse135-hw5.firebaseapp.com/**
+
 **CSE135 Grader Account:**
-- email: cse135grader@email.com
+- email: cse135grader@gmail.com
 - password: password
+	- Admin privileges enabled for this user!
 
 ### Stack
 #### Frontend
