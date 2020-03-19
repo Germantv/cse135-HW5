@@ -1,46 +1,95 @@
-# CSE135_HW4
+# CSE135_HW5
+
+### Hosting live using Firebase Hosting
+**https://germanflores-cse135-hw5.firebaseapp.com/**
+
+**CSE135 Grader Account:**
+- email: cse135grader@gmail.com
+- password: password
+	- Admin privileges enabled for this user!
+
+### Stack
+#### Frontend
+- VueJS
+- VueChartJS
+- AgGrid Vue
+#### Backend 
+- Firebase Functions
+- Firebase Authentication
+- NodeJS
+- Express
+- FireStore DB
 
 ## Overview of Auth Code
-**backend / fire-token / src / auth.middleware.ts**
-- Using Firebase Authentication, Express, NodeJS, TypeScript *(backend only)*, VueJS *(frontend)*
-#### Backend Auth Code
-```
-// Takes away TypeScript error lets me add more properties to req object
-interface IRequest extends Express.Request {
-	[key: string]: any
-}
+**backend / functions / index.js**
 
-const getAuthToken = (req: IRequest, _: any, next: any) => {
-	// Authorizaion: "Bearer 1232849dkls"
-	if(req.headers.authorization && req.headers.authorization.split(" ")[0] == "Bearer") {
-		// grab token from req header and set it
-		req.authToken = req.headers.authorization.split(" ")[1]
-	} else {
-		req.authToken = null
-	}
-	next()
-}
-
-// check if user is authenticated add this middleWare to get routes
-export const checkIfAuthenticated = (req: IRequest, res: Express.Response, next: any) => {
-	// calling getAuthToken created above and verifying bearer token 
-	getAuthToken(req, res, async () => {
-		try {
-			const { authToken } = req
-			// firebase verifyIdToken 
-			const userInfo = await admin.auth().verifyIdToken(authToken)
-			req.authId = userInfo.uid
-			return next()
-		} catch(err){
-			return res.status(401).send({error: 'You are not authorized'})
-		}
-	})
-}
+#### Backend Auth Code - Index.js Firebase Functions 
+## Routing Code
+All Routing for backend api happens inside **Index.js**
+- Moved backend code to Firebase functions to have it publicly deployed for grading
 ```
-- The above Authentication code has 2 methods: `getAuthToken` and `checkIfAuthenticated`
-  - `getAuthToken` gets called inside `checkIfAuthenticated` which gets used as middleware in my routes where I pull data from Firebase 
-#### Frontend Auth/Login Code
-**index.js**
+const functions = require('firebase-functions');
+const express = require('express');
+const admin = require('firebase-admin');
+const cors = require('cors');
+
+const app = express();
+
+admin.initializeApp(functions.config().firebase);
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true, credentials: true }));
+
+const db = admin.firestore();
+
+
+app.get("/roles", (req, res) => {
+	db.collection("roles").get()
+		.then((snapshot) => {
+			var docsArray = []
+			snapshot.forEach(doc => {
+				console.log(doc.id, "=>", doc.data())
+				docsArray.push(doc.data())
+			});
+			return res.send(docsArray)
+		})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+		});
+})
+
+app.get("/reports/browsers", (req, res) => {
+	db.collection('browsers').get()
+		.then((snapshot) => {
+			var docsArray = []
+			snapshot.forEach((doc) => {
+				console.log(doc.id, '=>', doc.data())
+				docsArray.push(doc.data())
+			});
+			return res.send(docsArray)
+		})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+		});
+})
+
+app.get("/reports/speed", (req, res) => {
+	db.collection('speeds').get()
+		.then((snapshot) => {
+			var docsArray = []
+			snapshot.forEach((doc) => {
+				console.log(doc.id, '=>', doc.data());
+				docsArray.push(doc.data())
+			});
+			return res.send(docsArray)
+		})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+		});
+})
+
+// Expose Express API as a single Cloud Function:
+exports.api = functions.https.onRequest(app);
+```
 ```
 // Dashboard view protected - requires auth - can't view any view nexted 
 // inside dashboard without being authenticated
@@ -79,70 +128,29 @@ export default {
 }
 </script>
 ```
-## Routing Code
-#### Backend
-**backend / fire-token / src / index.ts**
 
-My api endpoints are `/reports/browsers` and `/reports/speed` which also match the routing for my Vue endpoint
-```
-import * as Express from "express"
-import * as Cors from "cors"
-import * as admin from 'firebase-admin'
-import { checkIfAuthenticated } from './auth.middleware'
-
-const app = Express()
-const port = 3000
-
-let db = admin.firestore()
-
-app.use(Cors())
-
-app.get("/reports/browsers", checkIfAuthenticated, async (_, res: Express.Response) => {
-	db.collection('browsers').get()
-		.then((snapshot) => {
-			var docsArray: FirebaseFirestore.DocumentData[] = []
-			snapshot.forEach((doc) => {
-				console.log(doc.id, '=>', doc.data())
-				docsArray.push(doc.data())
-			});
-			return res.send(docsArray)
-		})
-		.catch((err) => {
-			console.log('Error getting documents', err);
-		});
-})
-
-app.get("/reports/speed", checkIfAuthenticated, async (_, res: Express.Response) => {
-	db.collection('speeds').get()
-		.then((snapshot) => {
-			var docsArray: FirebaseFirestore.DocumentData[] = []
-			snapshot.forEach((doc) => {
-				console.log(doc.id, '=>', doc.data());
-				docsArray.push(doc.data())
-			});
-			return res.send(docsArray)
-		})
-		.catch((err) => {
-			console.log('Error getting documents', err);
-		});
-})
-
-app.listen(port, () => console.log("working on port: " + port))
-```
-#### frontent (SPA)
+#### frontend (SPA)
 **frontend / cse135-hw4 / src / router / index.js**
-- App launches and goes to http://localhost:8082/ 
-	- click login goes to http://localhost:8082/login
-	- after user logs in taken to http://localhost:8082/dashboard
-	- dashboard has 2 buttons **Speeds** and **Browsers** which take you to http://localhost:8082/reports/speed  and http://localhost:8082/reports/browsers respectively
+- App launches and goes to https://germanflores-cse135-hw5.firebaseapp.com/
+- after user logs in taken to https://germanflores-cse135-hw5.firebaseapp.com/dashboard
+- dashboard has 2 buttons **Speeds** and **Browsers** which take you to:
+	- https://germanflores-cse135-hw5.firebaseapp.com/reports/speed  
+	- https://germanflores-cse135-hw5.firebaseapp.com/reports/browsers 
+- For final project, another button, **Admin** allows admin users to see user table, delete users, and edit users 
+	- route: https://germanflores-cse135-hw5.firebaseapp.com/admin
+	- https://germanflores-cse135-hw5.firebaseapp.com/edit/user
+- Finally, for Final, added **Profile** button to see your own logins and account information
+	- route: https://germanflores-cse135-hw5.firebaseapp.com/profile
 ```
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Speeds from '../views/Speeds.vue'
 import Browsers from '../views/Browsers.vue'
+import Admin from '../views/Admin.vue'
+import Profile from '../views/Profile.vue'
+import EditUser from '../views/EditUser.vue'
 
 import * as firebase from "firebase/app"
 import "firebase/auth"
@@ -152,11 +160,6 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/login',
     name: 'Login',
     component: Login
   },
@@ -164,7 +167,9 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: {requiresAuth: true}
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/reports/browsers',
@@ -176,6 +181,24 @@ const routes = [
     name: 'Speeds',
     component: Speeds
   },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/edit/user',
+    name: 'EditUser',
+    component: EditUser
+  }
 ]
 
 const router = new VueRouter({
@@ -184,12 +207,22 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const isAuthenticated = firebase.auth().currentUser
+  if(requiresAuth && !isAuthenticated) {
+    next("/dashboard")
+  } else {
+    next()
+  }
+})
 
 export default router
 
+
 ```
-## Diagram showing PoC examples including their routes
-![Diagram](https://github.com/Germantv/CSE135_HW4/blob/master/app-diagram.png)
+## Final Diagram showing All Routes and Views
+![Diagram](https://github.com/Germantv/CSE135-HW5/blob/master/final-wireframe.png)
 
 
 ## Grid Library Used
@@ -234,7 +267,9 @@ Creating Grid object and using exported data from <script> tags to populate grid
 	@grid-ready="onGridReady"
 ></ag-grid-vue>
 ```
-![grid screenshot](https://github.com/Germantv/CSE135_HW4/blob/master/grid-vue-filtering.png)	
+![grid screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/grid-vue-filtering.png)	
+![grid filter screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/browsers_filter_search.png)	
+
 ## Chart Library Used
 https://vue-chartjs.org/guide/#introduction
 - vue-chartsjs is a wrapper for Chart.js, a popular well known library for charts using JS
@@ -298,4 +333,15 @@ components: {
 },
 </script
 ```
-![chart screenshot](https://github.com/Germantv/CSE135_HW4/blob/master/chart-vue.png)	
+#### Charts in my Vue Project depicting data reports
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/speeds.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/browsers.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/dashboard.png)	
+![chart screenshot](https://github.com/Germantv/CSE135-HW5/blob/master/profile.png)	
+
+#### Admin Views 
+![deleted user](https://github.com/Germantv/CSE135-HW5/blob/master/admin_delete-user.png)	
+![edit user](https://github.com/Germantv/CSE135-HW5/blob/master/edit_user.png)	
+![success editing user](https://github.com/Germantv/CSE135-HW5/blob/master/success_edit-user.png)	
+**Admin View when User is not an Admin**
+![not admin view](https://github.com/Germantv/CSE135-HW5/blob/master/not_admin_view.png)	
