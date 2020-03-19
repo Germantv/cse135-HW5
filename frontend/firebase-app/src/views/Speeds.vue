@@ -12,8 +12,8 @@
 				@grid-ready="onGridReady"
 			></ag-grid-vue>
 		<div>
-			<bar-chart :chart-data="datacollection" style="margin: 0px 45% 0px 0px; display: inline-block"></bar-chart>
-			<line-chart :chart-data="datacollection" style="margin: 0px 0px 0px 75%px; display: inline-block"></line-chart>
+			<bar-chart :chart-data="datacollection" style="margin: 0px 40% 0px 0px; display: inline-block"></bar-chart>
+			<line-chart :chart-data="datacollection" style="margin: 0px 0px 0px 70%px; display: inline-block"></line-chart>
 		</div>
 
 		<!--
